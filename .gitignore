@@ -1,0 +1,14 @@
+# Surovi HTML predpomnilnik - ni potreben na GitHubu
+podatki/html_strani/
+podatki/html_modeli/
+
+# Python
+__pycache__/
+*.pyc
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Urejevalniki / OS
+.vscode/
+.DS_Store
