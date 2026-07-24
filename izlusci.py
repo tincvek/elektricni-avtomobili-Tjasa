@@ -60,18 +60,18 @@ def izlusci_podrobnosti_o_modelu(html_modela, znamka):
     baterija_re = re.search(r'Battery size.*?<div[^>]*>([\d\.]+)\s*kWh</div>', html_modela, re.DOTALL | re.IGNORECASE)
     polnjenje_re = re.search(r'Charging.*?<div[^>]*>(\d+)\s*min/100\s*km</div>', html_modela, re.DOTALL)
     pospesek_re = re.search(r'Acceleration.*?<div[^>]*>([\d\.]+)\s*sec</div>', html_modela, re.DOTALL)
-    cena_re = re.search(r'Price \(DE\).*?<div>\s*([\d\x27\s]+)\s*EUR\s*</div>', html_modela, re.DOTALL)
+    cena_re = re.search(r'Price\s+(.+?)\s*EUR', html_modela)
+    leto_re = re.search(r'Available since\s+\d{2}-(\d{4})', html_modela, re.DOTALL)
+
 
     return {
-        "doseg_[km]": float(doseg_re.group(1)) if doseg_re else None,
-        "poraba_[kWh/100km]": float(poraba_re.group(1)) if poraba_re else None,
-        "kapaciteta_[kWh]": float(baterija_re.group(1)) if baterija_re else None,
-        "cas_polnjenja(10-80%)_[min]": int(polnjenje_re.group(1)) if polnjenje_re else None,
-        "pospesek(0-100km/h)_[s]": float(pospesek_re.group(1)) if pospesek_re else None,
-        "cena_[EUR]": int(cena_re.group(1).replace('\x27', '').strip()) if cena_re else None,
-        "drzava": ZNAMKE_IN_DRZAVE.get(znamka, "Neznano")
-    }
-    
-
-
+    "doseg_[km]": float(doseg_re.group(1)) if doseg_re else None,
+    "poraba_[kWh/100km]": float(poraba_re.group(1)) if poraba_re else None,
+    "kapaciteta_[kWh]": float(baterija_re.group(1)) if baterija_re else None,
+    "cas_polnjenja[min/100km]": int(polnjenje_re.group(1)) if polnjenje_re else None,
+    "pospesek(0-100km/h)_[s]": float(pospesek_re.group(1)) if pospesek_re else None,
+    "cena_[EUR]": int(re.sub(r'\D', '', cena_re.group(1))) if cena_re else None,
+    "drzava": ZNAMKE_IN_DRZAVE.get(znamka, "Neznano"),
+    "leto": int(leto_re.group(1)) if leto_re else None
+}
 

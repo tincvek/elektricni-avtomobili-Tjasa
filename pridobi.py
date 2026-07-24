@@ -41,25 +41,25 @@ def pridobi_htmlje_avtomobilov(osnovni_podatki, mapa="podatki/html_modeli"):
         ime_datoteke = f"model_{url.strip('/').split('/')[-1]}.html"
         pot_datoteke = os.path.join(mapa, ime_datoteke)
 
-        if os.path.exists(pot_datoteke):
-            print(f"{ime_datoteke} ze prenesena, preskočim")
-            with open(pot_datoteke, "r", encoding="utf-8") as f:
+        # if os.path.exists(pot_datoteke):
+        print(f"{ime_datoteke} ze prenesena, preskočim")
+        with open(pot_datoteke, "r", encoding="utf-8") as f:
                 podatki_in_htmlji.append((podatek,f.read()))
-            continue
+        #     continue
 
-        odgovor = requests.get(url, headers=HEADERS)
+        # odgovor = requests.get(url, headers=HEADERS)
         
-        if odgovor.status_code != 200:
-            print(f"Napaka pri prenosu: {odgovor.status_code} - {url}")
-            continue
+        # if odgovor.status_code != 200:
+        #     print(f"Napaka pri prenosu: {odgovor.status_code} - {url}")
+        #     continue
 
-        vsebina = odgovor.text
-        with open(pot_datoteke, "w", encoding="utf-8") as f:
-            f.write(vsebina)
+        # vsebina = odgovor.text
+        # with open(pot_datoteke, "w", encoding="utf-8") as f:
+        #     f.write(vsebina)
 
-        podatki_in_htmlji.append((podatek, vsebina))
-        print(f"Prenesen model: {podatek['znamka']} {podatek['model']}")
+        # podatki_in_htmlji.append((podatek, vsebina))
+        # print(f"Prenesen model: {podatek['znamka']} {podatek['model']}")
 
-        time.sleep(1)
+        # time.sleep(1)
 
     return podatki_in_htmlji
