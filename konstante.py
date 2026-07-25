@@ -44,7 +44,8 @@ ZNAMKE_IN_DRZAVE = {
     "Lightyear": "Nizozemska",
     "Lotus": "Združeno kraljestvo", # Zgodovinsko UK, danes v večinski lasti kitajskega Geelyja
     "Lucid": "ZDA",
-    "Lynk&Co": "Kitajska",       # Skupno podjetje Geely in Volvo (pogosto uvrščeno pod Kitajsko)
+    "Lynk&Co": "Kitajska",
+    "Lynk&amp;Co": "Kitajska",       # Skupno podjetje Geely in Volvo (pogosto uvrščeno pod Kitajsko)
     "Maserati": "Italija",
     "Maxus": "Kitajska",         # V lasti SAIC Motor
     "Mazda": "Japonska",

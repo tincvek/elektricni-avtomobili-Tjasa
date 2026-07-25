@@ -16,6 +16,5 @@ print(f"Št. prenesenih HTML-jev: {len(podatki_in_htmlji)}")
 avtomobili = izlusci.podrobnosti_modelov(podatki_in_htmlji)
 print(f"Št. izluščenih avtomobilov: {len(avtomobili)}")  
 
-shrani.zapisi_modele_csv(avtomobili, "podatki", "avtomobili_csv")
-
+shrani.zapisi_modele_csv(avtomobili, "podatki", "avtomobili.csv")
 

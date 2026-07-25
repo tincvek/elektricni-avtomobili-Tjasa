@@ -1,7 +1,6 @@
 import re
 import os
 import json
-import html
 from konstante import ZNAMKE_IN_DRZAVE
 
 vzorec = re.compile(
@@ -11,42 +10,50 @@ vzorec = re.compile(
     re.DOTALL
 )
 
+def odstrani_duplikate(seznam, kljuc):
+    """Odstrani podvojene elemente iz seznama slovarjev glede na dani ključ,
+    pri čemer obdrži prvo pojavitev vsakega unikatnega vnosa."""
+    videni = set()
+    unikatni = []
+    for element in seznam:
+        if element[kljuc] not in videni:
+            videni.add(element[kljuc])
+            unikatni.append(element)
+    return unikatni
+
 def osnovni_podatki(stevilo_strani):
+    """Na vsaki strani izlušči osnovne podatke (znamka, model, link) vseh avtomobilov,
+    odstrani morebitne duplikate avtomobilov in jih zaradi preglednosti shrani v json datoteko."""
     osnovni = []
-    
+
     for i in range(1, stevilo_strani + 1):
         pot_datoteke = f"podatki/html_strani/stran{i}.html"
-        print(f"Preverjam pot: {os.path.abspath(pot_datoteke)}")
+
         if not os.path.exists(pot_datoteke):
-            print(f"html{i}-te strani nism našel")
+            print(f"html{i}-te strani nisem našel")
             continue
-            
+
         with open(pot_datoteke, "r", encoding="utf-8") as dat:
             vsebina = dat.read()
 
         for najdba in vzorec.finditer(vsebina):
-            info = {
+            osnovni.append({
                 "znamka": najdba["znamka"].strip(),
                 "model": najdba["model"].strip(),
                 "link": najdba["link"],
-            }
-            osnovni.append(info)
-            
-    # odstrani duplikate po linku
-    videni_linki = set()
-    unikatni_osnovni = []
-    for avto in osnovni:
-        if avto["link"] not in videni_linki:
-            videni_linki.add(avto["link"])
-            unikatni_osnovni.append(avto)
+            })
+
+    unikatni_osnovni = odstrani_duplikate(osnovni, "link")
 
     with open("podatki/vsi_avtomobili.json", "w", encoding="utf-8") as f:
         json.dump(unikatni_osnovni, f, ensure_ascii=False, indent=4)
-    print(f"Shranjenih {len(unikatni_osnovni)} avtomobilov v vsi_avtomobili.json")
 
+    print(f"Shranjenih {len(unikatni_osnovni)} avtomobilov v vsi_avtomobili.json")
     return unikatni_osnovni
 
 def podrobnosti_modelov(podatki_in_htmlji):
+    """Sprejme seznam parov (slovar, string) in iz stringa izlusci slovar podrobnosti
+    ter ga združi s slovarjem osnovnih podatkov."""
     modeli = []
     for podatki_modela, html_modela in podatki_in_htmlji:
         podrobnosti = izlusci_podrobnosti_o_modelu(html_modela, podatki_modela["znamka"])
@@ -55,6 +62,7 @@ def podrobnosti_modelov(podatki_in_htmlji):
     return modeli
 
 def izlusci_podrobnosti_o_modelu(html_modela, znamka):
+    """"Naredi slovar podrobnosti vsakega modela."""
     doseg_re = re.search(r'Range.*?<div[^>]*>([\d\.]+)\s*km</div>', html_modela, re.DOTALL)
     poraba_re = re.search(r'Efficiency.*?<div[^>]*>([\d\.]+)\s*kWh/100km</div>', html_modela, re.DOTALL | re.IGNORECASE)
     baterija_re = re.search(r'Battery size.*?<div[^>]*>([\d\.]+)\s*kWh</div>', html_modela, re.DOTALL | re.IGNORECASE)
